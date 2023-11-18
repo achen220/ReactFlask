@@ -13,17 +13,23 @@ def home():
   if request.method == 'POST':
     #get the string format of the spotify playlist link
     #spotifyURL = json.loads(request.data.decode('utf-8')).get('playlistLink')
-    spotifyURL = "https://open.spotify.com/playlist/1VfBi4EsHizXH7ZkjLuFVy?si=eb3aa52e84874a12&nd=1&dlsi=619f2092a8a04fb1"
+    URL = "https://books.toscrape.com/"
     #
-    result = requests.get(spotifyURL)
+    result = requests.get(URL)
     doc = BeautifulSoup(result.text, "html.parser")
-    # open the file in w mode 
-    # set encoding to UTF-8 
-    with open("output.html", "w", encoding = 'utf-8') as file: 
-
-      # prettify the soup object and convert it into a string 
-      file.write(str(doc.prettify())) 
-    print(doc.prettify())
+    booksInfo = doc.find_all(class_="product_pod")
+    #print(booksInfo[0].find('h3').contents[0].get('title'))
+    infoStorage = []
+    for book in booksInfo:
+      info = {}
+      title = book.find('h3').contents[0].get('title')
+      info['title'] = title
+      price = book.find(class_="price_color").text[2:len(book.find(class_="price_color").text)]
+      info['price'] = price
+      availability = book.find(class_="instock availability").text.strip()
+      info['availability'] = availability
+      infoStorage.append(info)
+    print(infoStorage)
   return render_template("index.html")
 
 #only run server if this script is being ran in the file its created rather than imported
