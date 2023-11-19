@@ -39,12 +39,21 @@ def webscrape():
   workbook = Workbook()
   sheet = workbook.active
   # Write data to the Excel sheet
-  sheet['A1'] = 'Name'
-  sheet['B1'] = 'Age'
-  sheet['A2'] = 'John'
-  sheet['B2'] = 25
-  sheet['A3'] = 'Alice'
-  sheet['B3'] = 30
+
+  sheet['A1'] = 'Title'
+  sheet['B1'] = 'Price'
+  sheet['C1'] = 'Availability'
+  for index,book in enumerate(infoStorage):
+    for key, value in book.items():
+      if key == 'title':
+        cellLocation = 'A' + str(index + 2)
+        sheet[cellLocation] = value
+      elif key == 'price':
+        cellLocation = 'B' + str(index + 2)
+        sheet[cellLocation] = value
+      elif key == 'availability':
+        cellLocation = 'C' + str(index + 2)
+        sheet[cellLocation] = value
 
   # Save the workbook to a BytesIO object
   excel_data = BytesIO()
